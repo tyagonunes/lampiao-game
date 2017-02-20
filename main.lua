@@ -22,7 +22,7 @@ local uiGroup = display.newGroup()    -- Display group for UI objects like the s
 
 
 
-local background = display.newImageRect( backGroup, "img/fundo3.jpg", 600, 350)
+local background = display.newImageRect( backGroup, "img/fundo.jpg", 600, 350)
 background.x = display.contentCenterX
 background.y = display.contentCenterY
 
@@ -32,16 +32,14 @@ lampiao.x = display.contentCenterX
 lampiao.y = display.contentCenterY + 20
 
 
--- inimigo = display.newImageRect( mainGroup, "img/inimigo.png", 90, 100 )
--- inimigo.x = display.contentCenterX - 240
--- inimigo.y = display.contentCenterY - 90
-
-
-
-
 -- Esconde a barra de setStatus
 display.setStatusBar( display.HiddenStatusBar )
 
+
+local function updateScore ()
+  -- body...
+  scoreText.text = "Score: " .. score
+end
 
 livesText = display.newText( uiGroup, lives, display.contentCenterX, 40, "customfont.ttf", 13 )
 scoreText = display.newText( uiGroup, "Score: "..score, display.contentCenterX, 20, "customfont.ttf", 13 )
@@ -51,27 +49,41 @@ scoreText:setFillColor( unpack(colorTable) )
 
 
 -- Configure image sheet
+-- local sheetOptions =
+-- {
+--     frames =
+--     {
+--         {   -- 1) cangaceiro 1
+--             x = 50,
+--             y = 0,
+--             width = 172,
+--             height = 235
+--         },
+--
+--     },
+-- }
+
 local sheetOptions =
 {
     frames =
     {
         {   -- 1) cangaceiro 1
-            x = 50,
+            x = 0,
             y = 0,
-            width = 172,
-            height = 235
+            width = 123,
+            height = 200
         },
 
     },
 }
 
-local objectSheet = graphics.newImageSheet( "img/inimigo.png", sheetOptions )
+local objectSheet = graphics.newImageSheet( "img/gun.png", sheetOptions )
 
 
 local function criarInimigo()
-    local novoInimigo = display.newImageRect( mainGroup, objectSheet, 0, 71, 101 )
+    local novoInimigo = display.newImageRect( mainGroup, objectSheet, 0, 51, 70 )
     table.insert( inimigosTable, novoInimigo )
-    physics.addBody( novoInimigo, "static", { radius=40, bounce=0.8 } )
+    physics.addBody( novoInimigo, "static", { isSensor=true } )
     novoInimigo.myName = "inimigo"
 
     local whereFrom = math.random( 3 )
@@ -93,10 +105,29 @@ local function criarInimigo()
          novoInimigo.y = math.random( display.contentHeight - 20 )
          novoInimigo:setLinearVelocity( math.random( -120,-40 ), math.random( 20,60 ) )
      end
+
+     local function remove()
+       -- body...
+       display.remove( novoInimigo )
+       score = score + 1
+       updateScore();
+     end
+
+
+     novoInimigo:addEventListener( "tap", remove )
 end
 
 
-for i=1,10 do
-  -- body...
-  criarInimigo()
+local function gameLoop()
+
+    -- Create new asteroid
+    criarInimigo()
+
+    -- -- Remove asteroids which have drifted off screen
+    -- for i = #asteroidsTable, 1, -1 do
+    --
+    -- end
 end
+
+
+gameLoopTimer = timer.performWithDelay( 2000, gameLoop, 0 )
