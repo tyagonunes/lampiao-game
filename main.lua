@@ -1,20 +1,28 @@
 
 local physics = require( "physics" )
 physics.start()
+physics.setDrawMode( "normal" )
 physics.setGravity( 0, 0 )
 
 -- Seed the random number generator
 math.randomseed( os.time() )
+
 -- Initialize variables
 local lives = "X X X"
 local score = 0
-local died = false
 local inimigosTable = {}
+local proxNivel = 5
+local indexFama = 1
 local lampiao
 local inimigo
+local velocidade = 2000
 local gameLoopTimer
 local livesText
 local scoreText
+local famaText
+local soundShot = audio.loadSound( "sounds/Shot.mp3" )
+local soundRicochet = audio.loadSound( "sounds/ricochet.mp3" )
+local fama = {"Sem fama", "Caldo de bila", "Fuleiragem", "Alma de gato", "Cabra bom", "Gota serena", "Cabra arretado", "Alma sebosa", "Cabra da peste", "Lampião" }
 
 local backGroup = display.newGroup()  -- Display group for the background image
 local mainGroup = display.newGroup()  -- Display group for the ship, asteroids, lasers, etc.
@@ -36,17 +44,41 @@ lampiao.y = display.contentCenterY + 20
 display.setStatusBar( display.HiddenStatusBar )
 
 
+local function shot ()
+  -- body...
+  audio.play( soundShot )
+end
+
+-- background:addEventListener("tap", shot )
+local function updateFama ()
+
+  if (score >= proxNivel) then
+
+    proxNivel = proxNivel + 5
+    indexFama = indexFama + 1
+    famaText.text = "Cangaceiro "..fama[indexFama]
+
+    velocidade = velocidade - 1800
+  end
+end
+
+
 local function updateScore ()
   -- body...
   scoreText.text = "Score: " .. score
+  updateFama()
 end
+
+
 
 livesText = display.newText( uiGroup, lives, display.contentCenterX, 40, "customfont.ttf", 13 )
 scoreText = display.newText( uiGroup, "Score: "..score, display.contentCenterX, 20, "customfont.ttf", 13 )
-local colorTable = { "gray" }
-livesText:setFillColor( unpack(colorTable) )
-scoreText:setFillColor( unpack(colorTable) )
+famaText = display.newText( uiGroup, "Cangaceiro "..fama[indexFama], display.contentCenterX, 60, "customfont.ttf", 13 )
+local colorBlack = { "gray" }
 
+livesText:setFillColor( unpack(colorBlack) )
+scoreText:setFillColor( unpack(colorBlack) )
+famaText:setFillColor(unpack(colorBlack) )
 
 -- Configure image sheet
 -- local sheetOptions =
@@ -111,23 +143,17 @@ local function criarInimigo()
        display.remove( novoInimigo )
        score = score + 1
        updateScore();
+       shot()
      end
 
 
-     novoInimigo:addEventListener( "tap", remove )
+     novoInimigo:addEventListener( "touch", remove )
 end
 
 
 local function gameLoop()
-
-    -- Create new asteroid
     criarInimigo()
-
-    -- -- Remove asteroids which have drifted off screen
-    -- for i = #asteroidsTable, 1, -1 do
-    --
-    -- end
 end
 
 
-gameLoopTimer = timer.performWithDelay( 2000, gameLoop, 0 )
+gameLoopTimer = timer.performWithDelay( velocidade, gameLoop, 0 )
