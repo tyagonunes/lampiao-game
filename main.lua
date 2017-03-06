@@ -17,7 +17,6 @@ local lampiao
 local inimigo
 local velocidade = 2000
 local gameLoopTimer
-local livesText
 local scoreText
 local famaText
 local soundShot = audio.loadSound( "sounds/Shot.mp3" )
@@ -71,12 +70,10 @@ end
 
 
 
-livesText = display.newText( uiGroup, lives, display.contentCenterX, 40, "customfont.ttf", 13 )
 scoreText = display.newText( uiGroup, "Score: "..score, display.contentCenterX, 20, "customfont.ttf", 13 )
 famaText = display.newText( uiGroup, "Cangaceiro "..fama[indexFama], display.contentCenterX, 60, "customfont.ttf", 13 )
 local colorBlack = { "gray" }
 
-livesText:setFillColor( unpack(colorBlack) )
 scoreText:setFillColor( unpack(colorBlack) )
 famaText:setFillColor(unpack(colorBlack) )
 
@@ -118,24 +115,24 @@ local function criarInimigo()
     physics.addBody( novoInimigo, "static", { isSensor=true } )
     novoInimigo.myName = "inimigo"
 
-    local whereFrom = math.random( 3 )
+    local onde = math.random( 3 )
       -- local whereFrom = 2
 
-    if ( whereFrom == 1 ) then
-        -- From the left
-        novoInimigo.x = 10
-        novoInimigo.y = math.random( display.contentHeight - 20 )
-        novoInimigo:setLinearVelocity(60, 100 )
-    elseif ( whereFrom == 2 ) then
-       -- From the top
+    if ( onde == 1 ) then
+        -- Esquerda
+        novoInimigo.x = -10
+        novoInimigo.y = math.random( display.contentHeight )
+        transition.to( novoInimigo, { x=0, time=100, } )
+    elseif ( onde == 2 ) then
+       -- Baixo
        novoInimigo.x = math.random( display.contentWidth )
-       novoInimigo.y = 296
-       novoInimigo:setLinearVelocity( math.random( -40,40 ), math.random( 40,120 ) )
-     elseif ( whereFrom == 3 ) then
-         -- From the right
+       novoInimigo.y = 300
+       transition.to( novoInimigo, { y=280, time=100, } )
+   elseif ( onde == 3 ) then
+         -- Direita
          novoInimigo.x = display.contentWidth
-         novoInimigo.y = math.random( display.contentHeight - 20 )
-         novoInimigo:setLinearVelocity( math.random( -120,-40 ), math.random( 20,60 ) )
+         novoInimigo.y = math.random( display.contentHeight )
+         transition.to( novoInimigo, { x=display.contentWidth -10, time=100, } )
      end
 
      local function remove()
