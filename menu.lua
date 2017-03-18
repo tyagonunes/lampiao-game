@@ -9,8 +9,12 @@ local scene = composer.newScene()
 -- -----------------------------------------------------------------------------------
 
 
+
+local music = audio.loadStream( "sounds/music_menu.mp3" )
+
 local function gotoGame()
-    composer.gotoScene( "game" )
+    audio.dispose( music )
+    composer.gotoScene( "game", { time=400, effect="crossFade" } )
 end
 
 local function gotoHighScores()
@@ -23,6 +27,7 @@ end
 
 -- create()
 function scene:create( event )
+    audio.play( music )
 
 	local sceneGroup = self.view
 	-- Code here runs when the scene is first created but has not yet appeared on screen
@@ -71,8 +76,9 @@ function scene:hide( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
+        composer.removeScene( "menu" )
 
-	elseif ( phase == "did" ) then
+    elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
 
 	end

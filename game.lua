@@ -80,6 +80,10 @@ local function updateScore ()
     updateFama()
 end
 
+local function endGame()
+    composer.setVariable( "finalScore", score )
+    composer.gotoScene( "gameover", { time=800, effect="crossFade" } )
+end
 
 ----------- Cria inimigos na tela
 
@@ -89,9 +93,8 @@ local function criarInimigo()
     table.insert( inimigosTable, inimigo )
 
     if (table.getn(inimigosTable) > 2) then
-        scoreText.text = "Voce perdeu"
         timer.cancel( gameLoopTimer )
-        gameover();
+        endGame();
     end
 
     physics.addBody( inimigo, "static", { isSensor=true } )
@@ -206,13 +209,13 @@ function scene:show( event )
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
         physics.start()
-        gameLoopTimer = timer.performWithDelay( 1000, gameLoop, 20 )
+        gameLoopTimer = timer.performWithDelay( 1000, gameLoop, 0 )
 
 
 
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
-        
+
 	end
 end
 
@@ -225,10 +228,11 @@ function scene:hide( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
+        timer.cancel( gameLoopTimer )
 
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
-
+        composer.removeScene( "game" )
 	end
 end
 
