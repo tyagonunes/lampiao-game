@@ -25,6 +25,7 @@ end
 function scene:create( event )
 
     local score = composer.getVariable( "finalScore" )
+    local fama = composer.getVariable( "fama" )
 
 	local sceneGroup = self.view
 	-- Code here runs when the scene is first created but has not yet appeared on screen
@@ -40,10 +41,13 @@ function scene:create( event )
     local score = display.newText( sceneGroup, "SCORE: ".. score, display.contentCenterX, 140, "customfont.ttf", 16 )
     score:setFillColor(unpack(colorBlack) )
 
-    local playButton = display.newText( sceneGroup, "Jogar Novamente", display.contentCenterX, 200, "customfont.ttf", 13 )
+    local score = display.newText( sceneGroup, "CANGACEIRO: ".. fama, display.contentCenterX, 180, "customfont.ttf", 16 )
+    score:setFillColor(unpack(colorBlack) )
+
+    local playButton = display.newText( sceneGroup, "Jogar Novamente", display.contentCenterX, 240, "customfont.ttf", 13 )
     playButton:setFillColor( unpack(colorBlack) )
 
-    local menuButton = display.newText( sceneGroup, "Menu", display.contentCenterX, 230, "customfont.ttf", 13 )
+    local menuButton = display.newText( sceneGroup, "Menu", display.contentCenterX, 270, "customfont.ttf", 13 )
     menuButton:setFillColor(unpack(colorBlack) )
 
 
