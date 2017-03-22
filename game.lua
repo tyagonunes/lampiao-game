@@ -237,28 +237,20 @@ end
 function scene:create( event )
 
 	local sceneGroup = self.view
-	-- Code here runs when the scene is first created but has not yet appeared on screen
 
+    backGroup = display.newGroup()
+    sceneGroup:insert( backGroup )
 
-    -- physics.pause()  -- Temporarily pause the physics engine
+    mainGroup = display.newGroup()
+    sceneGroup:insert( mainGroup )
 
-    -- Set up display groups
-    backGroup = display.newGroup()  -- Display group for the background image
-    sceneGroup:insert( backGroup )  -- Insert into the scene's view group
-
-    mainGroup = display.newGroup()  -- Display group for the ship, asteroids, lasers, etc.
-    sceneGroup:insert( mainGroup )  -- Insert into the scene's view group
-
-    uiGroup = display.newGroup()    -- Display group for UI objects like the score
-    sceneGroup:insert( uiGroup )    -- Insert into the scene's view group
+    uiGroup = display.newGroup()
+    sceneGroup:insert( uiGroup )
 
 
     local background = display.newImageRect( backGroup, "img/fundo.jpg", 600, 350)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
-
-
-
 
     for i = 1, #lampiaoImages do
        lampiao[i] = display.newImageRect( lampiaoGroup, lampiaoImages[i], 100, 100 )
