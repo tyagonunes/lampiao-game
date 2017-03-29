@@ -10,10 +10,9 @@ local scene = composer.newScene()
 
 
 
-local music = audio.loadStream( "sounds/music_menu.mp3" )
+--local music = audio.loadStream( "sounds/music_menu.mp3" )
 
 local function gotoGame()
-    audio.dispose( music )
     composer.gotoScene( "game", { time=400, effect="crossFade" } )
 end
 

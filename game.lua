@@ -8,11 +8,6 @@ local scene = composer.newScene()
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 
-local physics = require( "physics" )
-physics.start()
-physics.setDrawMode( "normal" )
-physics.setGravity( 0, 0 )
-
 
 local score = 0
 local inimigosTable = {}
@@ -23,33 +18,28 @@ local gameLoopTimer
 local scoreText
 local famaText
 local soundShot = audio.loadSound( "sounds/Shot.mp3" )
-local soundRicochet = audio.loadSound( "sounds/ricochet.mp3" )
-local fama = {"Sem fama", "Caldo de bila", "Fuleiragem", "Alma de gato", "Cabra bom", "Gota serena", "Cabra arretado", "Alma sebosa", "Cabra da peste", "Lampião" }
+
+local fama = {
+    "Sem fama", "Caldo de bila",
+    "Fuleiragem",
+    "Alma de gato",
+    "Cabra bom",
+    "Gota serena",
+    "Cabra arretado",
+    "Alma sebosa",
+    "Cabra da peste",
+    "Lampião"
+}
 
 local backGroup = display.newGroup()
 local mainGroup = display.newGroup()
 local uiGroup = display.newGroup()
 
-local sheetOptions =
-{
-    frames =
-    {
-        {   -- 1) cangaceiro 1
-            x = 0,
-            y = 0,
-            width = 123,
-            height = 200
-        },
-
-    },
-}
-local objectSheet = graphics.newImageSheet( "img/gun.png", sheetOptions )
-
 
 ----------- Variaveis de medidas de tela para localização dos inimigos -----------
-local lateral_meio = display.contentHeight/2
-local lateral_cima = display.contentHeight/9
-local lateral_baixo = display.contentHeight - 40
+local midSide = display.contentHeight/2
+local topSide = display.contentHeight/9
+local bottomSide = display.contentHeight - 40
 
 
 
@@ -63,7 +53,8 @@ local lampiaoImages = {
    "img/frame/left.png",
    "img/frame/leftbottom.png",
    "img/frame/lefttop.png"
-   }
+}
+
 
 
 -----------------------------------------------------
@@ -71,11 +62,6 @@ local lampiaoImages = {
 ------------------------------------------------------
 
 
-
----------- Função executa som de tiro----------------
-local function shot ()
-    audio.play( soundShot )
-end
 
 ------------- Atualiza o status da fama -------------
 
@@ -95,7 +81,6 @@ local function updateScore ()
 end
 
 local function endGame()
-
     local idx = lampiaoGroup.currentLampiao
     lampiao[idx].isVisible = false
 
@@ -108,7 +93,7 @@ end
 
 local function criarInimigo()
 
-    local inimigo = display.newImageRect( mainGroup, objectSheet, 0, 51, 70 )
+    local inimigo = display.newImageRect( mainGroup, "img/gun.png", 51, 70 )
     table.insert( inimigosTable, inimigo )
 
     if (table.getn(inimigosTable) > 2) then
@@ -116,95 +101,91 @@ local function criarInimigo()
         endGame();
     end
 
-    physics.addBody( inimigo, "static", { isSensor=true } )
-    inimigo.myName = "inimigo"
 
-    local lado = math.random( 3 )
-    local altura = math.random( 3 )
+    local randomPosition = math.random(6)
 
-    if ( lado == 1 ) then
-        -- Esquerda
-        inimigo.x = -10
+-- Posiciona o inimigo de acordo com o random
+-- Legenda:
+-- lm = left middle
+-- Lt = Left top
+-- lb = Left bottom
 
-        if (altura == 1) then
-            inimigo.y = lateral_cima
-            inimigo.posicao = "ec"
-        elseif (altura == 2)then
-            inimigo.y = lateral_meio
-            inimigo.posicao = "em"
-        elseif (altura == 3) then
-            inimigo.y = lateral_baixo
-            inimigo.posicao = "eb"
+-- rm = Right middle
+-- rt = Right top
+-- rb = Right bottom
+
+
+    local position = {
+        [1] = function ()
+            inimigo.x = -10
+            inimigo.y = topSide
+            inimigo.posicao = "lt"
+            transition.to( inimigo, { x=0, time=100, } )
+        end,
+        [2] = function ()
+            inimigo.x = -10
+            inimigo.y = midSide
+            inimigo.posicao = "lm"
+            transition.to( inimigo, { x=0, time=100, } )
+        end,
+        [3] = function ()
+            inimigo.x = -10
+            inimigo.y = bottomSide
+            inimigo.posicao = "lb"
+            transition.to( inimigo, { x=0, time=100, } )
+        end,
+
+        [4] = function ()
+             inimigo.x = display.contentWidth
+             inimigo.y = topSide
+             inimigo.posicao = "rt"
+             transition.to( inimigo, { x=display.contentWidth -10, time=100, } )
+        end,
+        [5] = function ()
+             inimigo.x = display.contentWidth
+             inimigo.y = midSide
+             inimigo.posicao = "rm"
+             transition.to( inimigo, { x=display.contentWidth -10, time=100, } )
+        end,
+        [6] = function ()
+             inimigo.x = display.contentWidth
+             inimigo.y = bottomSide
+             inimigo.posicao = "rb"
+             transition.to( inimigo, { x=display.contentWidth -10, time=100, } )
         end
-        transition.to( inimigo, { x=0, time=100, } )
+    }
 
-    elseif ( lado == 2 ) then
-       -- Baixo
-       inimigo.x = display.contentWidth/2
-       inimigo.y = 300
-       inimigo.posicao = "b"
-       transition.to( inimigo, { y=280, time=100, } )
-   elseif ( lado == 3 ) then
-         -- Direita
-         inimigo.x = display.contentWidth
-         if (altura == 1) then
-             inimigo.y = lateral_cima
-             inimigo.posicao = "dc"
-         elseif (altura == 2)then
-             inimigo.y = lateral_meio
-             inimigo.posicao = "dm"
-         elseif (altura == 3) then
-             inimigo.y = lateral_baixo
-             inimigo.posicao = "db"
+    position[randomPosition]()
+
+
+
+     local function tapInimigo(event)
+
+         function changeSprite (sprite)
+             local idx = lampiaoGroup.currentLampiao
+             lampiao[idx].isVisible = false
+             lampiaoGroup.currentLampiao = sprite
+             lampiao[lampiaoGroup.currentLampiao].isVisible = true
          end
-         transition.to( inimigo, { x=display.contentWidth -10, time=100, } )
-     end
 
-     local function tapListener(event)
 
-        if (inimigo.posicao == 'dm') then
-            local idx = lampiaoGroup.currentLampiao
-            lampiao[idx].isVisible = false
-            lampiaoGroup.currentLampiao = 2
-            lampiao[lampiaoGroup.currentLampiao].isVisible = true
+         local changeCharacterPosition = {
 
-        elseif (inimigo.posicao == 'b') then
-            local idx = lampiaoGroup.currentLampiao
-            lampiao[idx].isVisible = false
-            lampiaoGroup.currentLampiao = 1
-            lampiao[lampiaoGroup.currentLampiao].isVisible = true
+             ['rm'] = function () changeSprite(2) end,
 
-        elseif (inimigo.posicao == 'db') then
-            local idx = lampiaoGroup.currentLampiao
-            lampiao[idx].isVisible = false
-            lampiaoGroup.currentLampiao = 3
-            lampiao[lampiaoGroup.currentLampiao].isVisible = true
+             ['rb'] = function () changeSprite(3) end,
 
-        elseif (inimigo.posicao == 'dc') then
-            local idx = lampiaoGroup.currentLampiao
-            lampiao[idx].isVisible = false
-            lampiaoGroup.currentLampiao = 4
-            lampiao[lampiaoGroup.currentLampiao].isVisible = true
+             ['rt'] = function () changeSprite(4) end,
 
-        elseif (inimigo.posicao == 'em') then
-            local idx = lampiaoGroup.currentLampiao
-            lampiao[idx].isVisible = false
-            lampiaoGroup.currentLampiao = 5
-            lampiao[lampiaoGroup.currentLampiao].isVisible = true
+             ['lm'] = function () changeSprite(5) end,
 
-        elseif (inimigo.posicao == 'eb') then
-            local idx = lampiaoGroup.currentLampiao
-            lampiao[idx].isVisible = false
-            lampiaoGroup.currentLampiao = 6
-            lampiao[lampiaoGroup.currentLampiao].isVisible = true
+             ['lb'] = function () changeSprite(6) end,
 
-        elseif (inimigo.posicao == 'ec') then
-            local idx = lampiaoGroup.currentLampiao
-            lampiao[idx].isVisible = false
-            lampiaoGroup.currentLampiao = 7
-            lampiao[lampiaoGroup.currentLampiao].isVisible = true
+             ['lt'] = function () changeSprite(7) end
+         }
 
-        end
+         changeCharacterPosition[inimigo.posicao]()
+
 
 
         display.remove( inimigo )
@@ -215,12 +196,15 @@ local function criarInimigo()
                 break
             end
         end
+
         score = score + 1
+
         updateScore();
-        shot()
+
+        audio.play( soundShot )
      end
 
-     inimigo:addEventListener( "touch", tapListener )
+     inimigo:addEventListener( "touch", tapInimigo )
 end
 
 local function gameLoop()
@@ -261,9 +245,6 @@ function scene:create( event )
     lampiaoGroup.currentLampiao = 1
     lampiao[lampiaoGroup.currentLampiao].isVisible = true
 
-    -- lampiao = display.newImageRect( mainGroup, "img/frame/bottom.png", 100, 100 )
-    -- lampiao.x = display.contentCenterX
-    -- lampiao.y = display.contentCenterY + 20
 
     ------ Seta estilo e cor para os labels de score e fama -------------
     scoreText = display.newText( uiGroup, "Score: "..score, display.contentCenterX, 20, "customfont.ttf", 13 )
@@ -285,7 +266,6 @@ function scene:show( event )
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
         physics.start()
         gameLoopTimer = timer.performWithDelay( 1000, gameLoop, 0 )
-
 
 
 	elseif ( phase == "did" ) then
