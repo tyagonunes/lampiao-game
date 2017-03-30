@@ -96,10 +96,11 @@ local function criarInimigo()
     local inimigo = display.newImageRect( mainGroup, "img/gun.png", 51, 70 )
     table.insert( inimigosTable, inimigo )
 
-    if (table.getn(inimigosTable) > 2) then
-        timer.cancel( gameLoopTimer )
-        endGame();
-    end
+    -- if (table.getn(inimigosTable) > 2) then
+    --     timer.cancel( gameLoopTimer )
+    --     endGame();
+    -- end
+
 
 
     local randomPosition = math.random(6)
@@ -157,19 +158,17 @@ local function criarInimigo()
 
     position[randomPosition]()
 
+    function dead ()
+        timer.cancel( gameLoopTimer )
+        endGame();
+    end
+
+    local gameoverTimer = timer.performWithDelay( 2000, dead, 1 )
+
+    local function tapInimigo(event)
 
 
-     local function tapInimigo(event)
-
-         function changeSprite (sprite)
-             local idx = lampiaoGroup.currentLampiao
-             lampiao[idx].isVisible = false
-             lampiaoGroup.currentLampiao = sprite
-             lampiao[lampiaoGroup.currentLampiao].isVisible = true
-         end
-
-
-         local changeCharacterPosition = {
+        local changeCharacterPosition = {
 
              ['rm'] = function () changeSprite(2) end,
 
@@ -182,11 +181,18 @@ local function criarInimigo()
              ['lb'] = function () changeSprite(6) end,
 
              ['lt'] = function () changeSprite(7) end
-         }
+        }
 
-         changeCharacterPosition[inimigo.posicao]()
+        function changeSprite (sprite)
+             local idx = lampiaoGroup.currentLampiao
+             lampiao[idx].isVisible = false
+             lampiaoGroup.currentLampiao = sprite
+             lampiao[lampiaoGroup.currentLampiao].isVisible = true
+        end
 
+        changeCharacterPosition[inimigo.posicao]()
 
+        timer.cancel( gameoverTimer )
 
         display.remove( inimigo )
 
@@ -202,6 +208,7 @@ local function criarInimigo()
         updateScore();
 
         audio.play( soundShot )
+
      end
 
      inimigo:addEventListener( "touch", tapInimigo )
@@ -242,6 +249,7 @@ function scene:create( event )
        lampiao[i].y = display.contentCenterY + 20
        lampiao[i].isVisible = false
     end
+    
     lampiaoGroup.currentLampiao = 1
     lampiao[lampiaoGroup.currentLampiao].isVisible = true
 
@@ -249,9 +257,8 @@ function scene:create( event )
     ------ Seta estilo e cor para os labels de score e fama -------------
     scoreText = display.newText( uiGroup, "Score: "..score, display.contentCenterX, 20, "customfont.ttf", 13 )
     famaText = display.newText( uiGroup, "Cangaceiro "..fama[indexFama], display.contentCenterX, 60, "customfont.ttf", 13 )
-    local colorBlack = { "gray" }
-    scoreText:setFillColor( unpack(colorBlack) )
-    famaText:setFillColor(unpack(colorBlack) )
+    scoreText:setFillColor( gray )
+    famaText:setFillColor( gray )
 
 end
 

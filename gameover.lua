@@ -33,22 +33,21 @@ function scene:create( event )
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
-    local colorBlack = { "gray" }
 
     local title = display.newText( sceneGroup, "GAME OVER", display.contentCenterX, 90, "customfont.ttf", 30 )
-    title:setFillColor(unpack(colorBlack) )
+    title:setFillColor( gray )
 
-    local score = display.newText( sceneGroup, "SCORE: ".. score, display.contentCenterX, 140, "customfont.ttf", 16 )
-    score:setFillColor(unpack(colorBlack) )
+    local scoreLabel = display.newText( sceneGroup, "SCORE: ".. score, display.contentCenterX, 140, "customfont.ttf", 16 )
+    scoreLabel:setFillColor( gray )
 
-    local score = display.newText( sceneGroup, "CANGACEIRO: ".. fama, display.contentCenterX, 180, "customfont.ttf", 16 )
-    score:setFillColor(unpack(colorBlack) )
+    local famaLabel = display.newText( sceneGroup, "CANGACEIRO: ".. fama, display.contentCenterX, 180, "customfont.ttf", 16 )
+    famaLabel:setFillColor( gray )
 
     local playButton = display.newText( sceneGroup, "Jogar Novamente", display.contentCenterX, 240, "customfont.ttf", 13 )
-    playButton:setFillColor( unpack(colorBlack) )
+    playButton:setFillColor( gray )
 
     local menuButton = display.newText( sceneGroup, "Menu", display.contentCenterX, 270, "customfont.ttf", 13 )
-    menuButton:setFillColor(unpack(colorBlack) )
+    menuButton:setFillColor( gray )
 
 
     playButton:addEventListener( "tap", gotoGame )
