@@ -18,6 +18,7 @@ local gameLoopTimer
 local scoreText
 local famaText
 local soundShot = audio.loadSound( "sounds/Shot.mp3" )
+local grito = audio.loadSound ("sounds/grito-maria.mp3")
 
 local fama = {
     "Sem fama", "Caldo de bila",
@@ -76,7 +77,7 @@ end
 ----------- Atualiza o score -----------------------
 
 local function updateScore ()
-    scoreText.text = "Score: " .. score
+    scoreText.text = score
     updateFama()
 end
 
@@ -93,7 +94,7 @@ end
 
 local function criarInimigo()
 
-    local inimigo = display.newImageRect( mainGroup, "img/gun.png", 51, 70 )
+    local inimigo = display.newImageRect( mainGroup, "img/enemy.png", 51, 70 )
     table.insert( inimigosTable, inimigo )
 
     -- if (table.getn(inimigosTable) > 2) then
@@ -163,7 +164,7 @@ local function criarInimigo()
         endGame();
     end
 
-    local gameoverTimer = timer.performWithDelay( 2000, dead, 1 )
+    local gameoverTimer = timer.performWithDelay( 1000, dead, 1 )
 
     local function tapInimigo(event)
 
@@ -249,13 +250,13 @@ function scene:create( event )
        lampiao[i].y = display.contentCenterY + 20
        lampiao[i].isVisible = false
     end
-    
+
     lampiaoGroup.currentLampiao = 1
     lampiao[lampiaoGroup.currentLampiao].isVisible = true
 
 
     ------ Seta estilo e cor para os labels de score e fama -------------
-    scoreText = display.newText( uiGroup, "Score: "..score, display.contentCenterX, 20, "customfont.ttf", 13 )
+    scoreText = display.newText( uiGroup, score, display.contentCenterX, 20, "customfont.ttf", 18 )
     famaText = display.newText( uiGroup, "Cangaceiro "..fama[indexFama], display.contentCenterX, 60, "customfont.ttf", 13 )
     scoreText:setFillColor( gray )
     famaText:setFillColor( gray )
@@ -304,7 +305,7 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
-
+    
 end
 
 

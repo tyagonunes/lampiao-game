@@ -38,36 +38,36 @@ function scene:create( event )
     local title = display.newText( sceneGroup, "CANGACEIRO LAMPIÃO", display.contentCenterX, 90, "customfont.ttf", 30 )
     title:setFillColor( gray )
 
-    -- local playButton = display.newText( sceneGroup, "Play", display.contentCenterX, 180, "customfont.ttf", 13 )
-    -- playButton:setFillColor( gray )
-    --
-    -- local highScoresButton = display.newText( sceneGroup, "High Scores", display.contentCenterX, 220, "customfont.ttf", 13 )
-    -- highScoresButton:setFillColor( gray )
+    local playButton = display.newText( sceneGroup, "Começar", display.contentCenterX, 180, "customfont.ttf", 15 )
+    playButton:setFillColor( gray )
+
+    local highScoresButton = display.newText( sceneGroup, "Opções", display.contentCenterX, 220, "customfont.ttf", 15 )
+    highScoresButton:setFillColor( gray )
 
 
-    --playButton:addEventListener( "tap", gotoGame )
-    --highScoresButton:addEventListener( "tap", gotoHighScores )
+    playButton:addEventListener( "tap", gotoGame )
+    highScoresButton:addEventListener( "tap", gotoHighScores )
 
 
-    -- Create the widget
-    local button1 = widget.newButton(
-        {
-            label = "Começar",
-            onEvent = gotoGame,
-            emboss = false,
-            -- Properties for a rounded rectangle button
-            shape = "roundedRect",
-            width = 200,
-            height = 40,
-            cornerRadius = 2,
-            fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} },
-            strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
-            strokeWidth = 4
-        })
-
-        -- Center the button
-        button1.x = display.contentCenterX
-        button1.y = display.contentCenterY
+--     -- Create the widget
+--     local button1 = widget.newButton(
+--         {
+--             label = "Começar",
+--             onEvent = gotoGame,
+--             emboss = false,
+--             -- Properties for a rounded rectangle button
+--             shape = "roundedRect",
+--             width = 200,
+--             height = 50,
+--             cornerRadius = 2,
+--             fillColor = { default={2,2,1,1}, over={1,0.1,1.7,0.4} },
+--             strokeColor = { default={1,1.4,0,0}, over={0.8,0.8,1,1} },
+--             strokeWidth = 4
+--         })
+--
+--         -- Center the button
+--         button1.x = display.contentCenterX
+--         button1.y = display.contentCenterY
 end
 
 
@@ -109,7 +109,7 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
-
+    
 end
 
 

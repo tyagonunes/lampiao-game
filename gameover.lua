@@ -34,7 +34,7 @@ function scene:create( event )
     background.y = display.contentCenterY
 
 
-    local title = display.newText( sceneGroup, "GAME OVER", display.contentCenterX, 90, "customfont.ttf", 30 )
+    local title = display.newText( sceneGroup, "VOCÊ FOI PEGO!", display.contentCenterX, 90, "customfont.ttf", 30 )
     title:setFillColor( gray )
 
     local scoreLabel = display.newText( sceneGroup, "SCORE: ".. score, display.contentCenterX, 140, "customfont.ttf", 16 )
@@ -92,6 +92,7 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
+    
 
 end
 
