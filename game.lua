@@ -17,15 +17,14 @@ local inimigo
 local gameLoopTimer
 local scoreText
 local famaText
-local soundShot = audio.loadSound( "sounds/Shot.mp3" )
-local grito = audio.loadSound ("sounds/grito-maria.mp3")
+local soundShot = audio.loadSound( "sounds/Shot2.mp3" )
 
 local fama = {
-    "Sem fama", "Caldo de bila",
+    "Iniciante", "Caldo de bila",
     "Fuleiragem",
     "Alma de gato",
     "Cabra bom",
-    "Gota serena",
+    "da Gota serena",
     "Cabra arretado",
     "Alma sebosa",
     "Cabra da peste",
@@ -77,7 +76,7 @@ end
 ----------- Atualiza o score -----------------------
 
 local function updateScore ()
-    scoreText.text = score
+    scoreText.text = "Mortos: "..score
     updateFama()
 end
 
@@ -160,8 +159,10 @@ local function criarInimigo()
     position[randomPosition]()
 
     function dead ()
-        timer.cancel( gameLoopTimer )
+      timer.cancel( gameLoopTimer )
+      timer.performWithDelay( 2000, function ()
         endGame();
+      end )
     end
 
     local gameoverTimer = timer.performWithDelay( 1000, dead, 1 )
@@ -240,7 +241,7 @@ function scene:create( event )
     sceneGroup:insert( uiGroup )
 
 
-    local background = display.newImageRect( backGroup, "img/fundo.jpg", 600, 350)
+    local background = display.newImageRect( backGroup, "img/fundo_cordel.jpg", 600, 350)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
@@ -256,8 +257,8 @@ function scene:create( event )
 
 
     ------ Seta estilo e cor para os labels de score e fama -------------
-    scoreText = display.newText( uiGroup, score, display.contentCenterX, 20, "customfont.ttf", 18 )
-    famaText = display.newText( uiGroup, "Cangaceiro "..fama[indexFama], display.contentCenterX, 60, "customfont.ttf", 13 )
+    scoreText = display.newText( uiGroup, "Mortos: "..score, display.contentCenterX, 20, "cordel_I.ttf", 18 )
+    famaText = display.newText( uiGroup, "Cangaceiro "..fama[indexFama], display.contentCenterX, 60, "cordel_I.ttf", 13 )
     scoreText:setFillColor( gray )
     famaText:setFillColor( gray )
 
@@ -305,7 +306,7 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
-    
+
 end
 
 

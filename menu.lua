@@ -10,7 +10,7 @@ local scene = composer.newScene()
 
 
 
---local music = audio.loadStream( "sounds/music_menu.mp3" )
+local music = audio.loadStream( "sounds/music_menu.mp3" )
 
 local function gotoGame()
     composer.gotoScene( "game", { time=400, effect="crossFade" } )
@@ -26,27 +26,45 @@ end
 
 -- create()
 function scene:create( event )
-    audio.play( music )
+    --audio.play( music )
 
 	local sceneGroup = self.view
 	-- Code here runs when the scene is first created but has not yet appeared on screen
-    local background = display.newImageRect( sceneGroup, "img/fundo.jpg", 600, 350 )
+    local background = display.newImageRect( sceneGroup, "img/fundo_cordel.jpg", 600, 350 )
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
+    local iconChapeu = display.newText( sceneGroup, "&", display.contentCenterX, 50, "xilosa.ttf", 50 )
+    iconChapeu:setFillColor( gray )
 
-    local title = display.newText( sceneGroup, "CANGACEIRO LAMPIÃO", display.contentCenterX, 90, "customfont.ttf", 30 )
+    local title = display.newText( sceneGroup, "Rei do cangaço", display.contentCenterX, 120, "cordel_I.ttf", 30 )
     title:setFillColor( gray )
 
-    local playButton = display.newText( sceneGroup, "Começar", display.contentCenterX, 180, "customfont.ttf", 15 )
+    local playButton = display.newText( sceneGroup, "Jogar", display.contentCenterX, 180, "cordel_I.ttf", 16 )
     playButton:setFillColor( gray )
 
-    local highScoresButton = display.newText( sceneGroup, "Opções", display.contentCenterX, 220, "customfont.ttf", 15 )
-    highScoresButton:setFillColor( gray )
+    local options = display.newText( sceneGroup, "Opções", display.contentCenterX, 220, "cordel_I.ttf", 16 )
+    options:setFillColor( gray )
 
+
+    local iconEnemy = display.newText( sceneGroup, "_", -400, 280, "cordel_I.ttf", 70 )
+    iconEnemy:setFillColor( gray )
+    transition.to( iconEnemy, { x=display.contentWidth + 150, time=150000, } )
+
+    local iconLampiao = display.newText( sceneGroup, "!", -200, 280, "cordel_I.ttf", 70 )
+    iconLampiao:setFillColor( gray )
+    transition.to( iconLampiao, { x=display.contentWidth + 150, time=100000, } )
+
+    local iconHouse = display.newText( sceneGroup, "$", 40, 280, "cordel_I.ttf", 90 )
+    iconHouse:setFillColor( gray )
+    transition.to( iconHouse, { x=display.contentWidth + 150, time=80000, } )
+
+    local iconPlants = display.newText( sceneGroup, "&", display.contentWidth - 40, 280, "cordel_I.ttf", 90 )
+    iconPlants:setFillColor( gray )
+    transition.to( iconPlants, { x=display.contentWidth + 150, time=40000, } )
 
     playButton:addEventListener( "tap", gotoGame )
-    highScoresButton:addEventListener( "tap", gotoHighScores )
+    options:addEventListener( "tap", gotoHighScores )
 
 
 --     -- Create the widget
@@ -82,6 +100,10 @@ function scene:show( event )
 
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
+    timer.performWithDelay( 5, function()
+				audio.play( music, { loops = -1, channel = 2 } )
+				audio.fade({ channel = 1, time = 333, volume = 1.0 } )
+			end)
 
 	end
 end
@@ -109,7 +131,7 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
-    
+
 end
 
 

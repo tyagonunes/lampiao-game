@@ -14,6 +14,8 @@ local function gotoGame()
 end
 
 local function gotoMenu()
+    audio.stop()  -- Stop all audio
+    audio.dispose( music )  -- Release music handle
     composer.gotoScene( "menu", { time=400, effect="crossFade" } )
 end
 
@@ -29,26 +31,36 @@ function scene:create( event )
 
 	local sceneGroup = self.view
 	-- Code here runs when the scene is first created but has not yet appeared on screen
-    local background = display.newImageRect( sceneGroup, "img/fundo.jpg", 600, 350 )
+    local background = display.newImageRect( sceneGroup, "img/fundo_cordel.jpg", 600, 350 )
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
 
-    local title = display.newText( sceneGroup, "VOCÊ FOI PEGO!", display.contentCenterX, 90, "customfont.ttf", 30 )
+    local title = display.newText( sceneGroup, "VOCÊ FOI PEGO", display.contentCenterX, 60, "cordel_I.ttf", 30 )
     title:setFillColor( gray )
 
-    local scoreLabel = display.newText( sceneGroup, "SCORE: ".. score, display.contentCenterX, 140, "customfont.ttf", 16 )
+    local scoreLabel = display.newText( sceneGroup, "Mortos: ".. score, display.contentCenterX, 120, "cordel_I.ttf", 20 )
     scoreLabel:setFillColor( gray )
 
-    local famaLabel = display.newText( sceneGroup, "CANGACEIRO: ".. fama, display.contentCenterX, 180, "customfont.ttf", 16 )
+    local famaTitle = display.newText( sceneGroup, "Legado: ", display.contentCenterX, 160, "cordel_I.ttf", 14 )
+    famaTitle:setFillColor( gray )
+
+    local famaLabel = display.newText( sceneGroup, "Cangaceiro "..fama, display.contentCenterX, 190, "cordel_I.ttf", 14 )
     famaLabel:setFillColor( gray )
 
-    local playButton = display.newText( sceneGroup, "Jogar Novamente", display.contentCenterX, 240, "customfont.ttf", 13 )
+    local playButton = display.newText( sceneGroup, "Vai de novo", display.contentCenterX - 50, 240, "cordel_I.ttf", 16 )
     playButton:setFillColor( gray )
 
-    local menuButton = display.newText( sceneGroup, "Menu", display.contentCenterX, 270, "customfont.ttf", 13 )
+    local menuButton = display.newText( sceneGroup, "MENU", display.contentCenterX + 70, 240, "cordel_I.ttf", 16 )
     menuButton:setFillColor( gray )
 
+    local iconHouse = display.newText( sceneGroup, "$", 40, 270, "cordel_I.ttf", 90 )
+    iconHouse:setFillColor( gray )
+    transition.to( iconHouse, { x=80, time=10000, } )
+
+    local iconPlants = display.newText( sceneGroup, "&", display.contentWidth - 40, 270, "cordel_I.ttf", 90 )
+    iconPlants:setFillColor( gray )
+    transition.to( iconPlants, { x=display.contentWidth, time=10000, } )
 
     playButton:addEventListener( "tap", gotoGame )
     menuButton:addEventListener( "tap", gotoMenu )
@@ -82,7 +94,8 @@ function scene:hide( event )
 
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
-        composer.removeScene( "gameover" )
+
+
 	end
 end
 
@@ -92,7 +105,7 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
-    
+  composer.removeScene( "gameover" )
 
 end
 
