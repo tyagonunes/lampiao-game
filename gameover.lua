@@ -54,13 +54,21 @@ function scene:create( event )
     local menuButton = display.newText( sceneGroup, "MENU", display.contentCenterX + 70, 240, "cordel_I.ttf", 16 )
     menuButton:setFillColor( gray )
 
-    local iconHouse = display.newText( sceneGroup, "$", 40, 270, "cordel_I.ttf", 90 )
-    iconHouse:setFillColor( gray )
-    transition.to( iconHouse, { x=80, time=10000, } )
+    local iconEnemy = display.newText( sceneGroup, "_", -400, display.contentHeight - 40, "cordel_I.ttf", 70 )
+    iconEnemy:setFillColor( gray )
+    transition.to( iconEnemy, { x=display.contentWidth + 150, time=150000, } )
 
-    local iconPlants = display.newText( sceneGroup, "&", display.contentWidth - 40, 270, "cordel_I.ttf", 90 )
+    local iconLampiao = display.newText( sceneGroup, "!", -200, display.contentHeight - 40, "cordel_I.ttf", 70 )
+    iconLampiao:setFillColor( gray )
+    transition.to( iconLampiao, { x=display.contentWidth + 150, time=100000, } )
+
+    local iconHouse = display.newText( sceneGroup, "$", 40, display.contentHeight - 40, "cordel_I.ttf", 70 )
+    iconHouse:setFillColor( gray )
+    transition.to( iconHouse, { x=display.contentWidth + 150, time=80000, } )
+
+    local iconPlants = display.newText( sceneGroup, "&", display.contentWidth - 40, display.contentHeight - 40, "cordel_I.ttf", 70 )
     iconPlants:setFillColor( gray )
-    transition.to( iconPlants, { x=display.contentWidth, time=10000, } )
+    transition.to( iconPlants, { x=display.contentWidth + 150, time=40000, } )
 
     playButton:addEventListener( "tap", gotoGame )
     menuButton:addEventListener( "tap", gotoMenu )

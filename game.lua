@@ -96,13 +96,6 @@ local function criarInimigo()
     local inimigo = display.newImageRect( mainGroup, "img/enemy.png", 51, 70 )
     table.insert( inimigosTable, inimigo )
 
-    -- if (table.getn(inimigosTable) > 2) then
-    --     timer.cancel( gameLoopTimer )
-    --     endGame();
-    -- end
-
-
-
     local randomPosition = math.random(6)
 
 -- Posiciona o inimigo de acordo com o random
@@ -216,12 +209,10 @@ local function criarInimigo()
      inimigo:addEventListener( "touch", tapInimigo )
 end
 
-local function gameLoop()
-    criarInimigo()
+
+local function start ()
+    gameLoopTimer = timer.performWithDelay( 1000, criarInimigo, 0 )
 end
-
-
-
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -262,6 +253,8 @@ function scene:create( event )
     scoreText:setFillColor( gray )
     famaText:setFillColor( gray )
 
+    local btnPause = display.newText( uiGroup, "Pare", display.contentCenterX, 300, "cordel_I.ttf", 14 )
+    btnPause:setFillColor( gray )
 end
 
 
@@ -273,13 +266,12 @@ function scene:show( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
-        physics.start()
-        gameLoopTimer = timer.performWithDelay( 1000, gameLoop, 0 )
+
 
 
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
-
+      start()
 	end
 end
 
@@ -292,11 +284,11 @@ function scene:hide( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
-        timer.cancel( gameLoopTimer )
+        composer.removeScene( "game" )
 
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
-        composer.removeScene( "game" )
+
 	end
 end
 

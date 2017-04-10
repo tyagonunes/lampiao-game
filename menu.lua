@@ -47,19 +47,19 @@ function scene:create( event )
     options:setFillColor( gray )
 
 
-    local iconEnemy = display.newText( sceneGroup, "_", -400, 280, "cordel_I.ttf", 70 )
+    local iconEnemy = display.newText( sceneGroup, "_", -400, display.contentHeight - 40, "cordel_I.ttf", 70 )
     iconEnemy:setFillColor( gray )
     transition.to( iconEnemy, { x=display.contentWidth + 150, time=150000, } )
 
-    local iconLampiao = display.newText( sceneGroup, "!", -200, 280, "cordel_I.ttf", 70 )
+    local iconLampiao = display.newText( sceneGroup, "!", -200, display.contentHeight - 40, "cordel_I.ttf", 70 )
     iconLampiao:setFillColor( gray )
     transition.to( iconLampiao, { x=display.contentWidth + 150, time=100000, } )
 
-    local iconHouse = display.newText( sceneGroup, "$", 40, 280, "cordel_I.ttf", 90 )
+    local iconHouse = display.newText( sceneGroup, "$", 40, display.contentHeight - 40, "cordel_I.ttf", 70 )
     iconHouse:setFillColor( gray )
     transition.to( iconHouse, { x=display.contentWidth + 150, time=80000, } )
 
-    local iconPlants = display.newText( sceneGroup, "&", display.contentWidth - 40, 280, "cordel_I.ttf", 90 )
+    local iconPlants = display.newText( sceneGroup, "&", display.contentWidth - 40, display.contentHeight - 40, "cordel_I.ttf", 70 )
     iconPlants:setFillColor( gray )
     transition.to( iconPlants, { x=display.contentWidth + 150, time=40000, } )
 
