@@ -12,13 +12,11 @@ local scene = composer.newScene()
 
 local music = audio.loadStream( "assets/sounds/music_menu.mp3" )
 
-local function gotoGame()
-    composer.gotoScene( "game", { time=400, effect="crossFade" } )
+local function gotoInstructions()
+    composer.gotoScene( "instrucoes", { time=400, effect="crossFade" } )
 end
 
-local function gotoHighScores()
-    composer.gotoScene( "highscores" )
-end
+
 
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -37,14 +35,13 @@ function scene:create( event )
     local iconChapeu = display.newText( sceneGroup, "&", display.contentCenterX, 50, "assets/fonts/xilosa.ttf", 50 )
     iconChapeu:setFillColor( gray )
 
-    local title = display.newText( sceneGroup, "Rei do cangaço", display.contentCenterX, 120, "assets/fonts/cordel.ttf", 30 )
+    local title = display.newText( sceneGroup, "Rei do cangaço", display.contentCenterX, 120, "assets/fonts/xilosa.ttf", 50 )
     title:setFillColor( gray )
 
-    local playButton = display.newText( sceneGroup, "Jogar", display.contentCenterX, 180, "assets/fonts/cordel_I.ttf", 16 )
+    local playButton = display.newText( sceneGroup, "Jogar", display.contentCenterX, 200, "assets/fonts/xilosa.ttf", 35 )
     playButton:setFillColor( gray )
 
-    local options = display.newText( sceneGroup, "Opções", display.contentCenterX, 220, "assets/fonts/cordel_I.ttf", 16 )
-    options:setFillColor( gray )
+   
 
 
     local iconEnemy = display.newText( sceneGroup, "_", -400, display.contentHeight - 40, "assets/fonts/cordel_I.ttf", 70 )
@@ -63,8 +60,8 @@ function scene:create( event )
     iconPlants:setFillColor( gray )
     transition.to( iconPlants, { x=display.contentWidth + 150, time=40000, } )
 
-    playButton:addEventListener( "tap", gotoGame )
-    options:addEventListener( "tap", gotoHighScores )
+    playButton:addEventListener( "tap", gotoInstructions )
+   
 end
 
 

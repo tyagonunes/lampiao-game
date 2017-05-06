@@ -102,7 +102,7 @@ function scene:hide( event )
 
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
-
+         composer.removeScene( "gameover" )
 
 	end
 end
@@ -113,7 +113,7 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
-  composer.removeScene( "gameover" )
+  --composer.removeScene( "gameover" )
 
 end
 

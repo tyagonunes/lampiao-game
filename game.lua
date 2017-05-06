@@ -19,7 +19,7 @@ local gameLoopTimer
 local scoreText
 local famaText
 local soundShot = audio.loadSound( "assets/sounds/Shot2.mp3" )
-
+local soundPain = audio.loadSound( "assets/sounds/pain.mp3" )
 local fama = {
     "Iniciante", "Caldo de bila", "Fuleiragem",
     "Alma de gato", "Cabra bom", "da Gota serena",
@@ -64,30 +64,56 @@ local lampiaoImages = {
 
 function updateFama ()
     if (score >= proxNivel) then
-        proxNivel = proxNivel + 10
-        indexFama = indexFama + 1
-        famaText.text = "Cangaceiro "..fama[indexFama]
-
-        if (speed > 200) then
+        if (indexFama < table.getn(fama)) then
+            proxNivel = proxNivel + 10
+            indexFama = indexFama + 1            
+            famaText.text = ""..fama[indexFama]
             speed = speed - 100
+            timer.cancel(gameLoopTimer)
+            start(speed)
         end
-
-        timer.cancel(gameLoopTimer)
-        start(speed)
     end
 end
 
 ----------- Atualiza o score -----------------------
 
 function updateScore ()
-    scoreText.text = "Mortos: "..score
+    scoreText.text = "Vítimas: "..score
     updateFama()
 end
 
+ local changeCharacterPosition = {
+     ['rm'] = function () changeSprite(3) end,
+     ['rb'] = function () changeSprite(4) end,
+     ['rt'] = function () changeSprite(5) end,
+     ['lm'] = function () changeSprite(6) end,
+     ['lb'] = function () changeSprite(7) end,
+     ['lt'] = function () changeSprite(8) end
+        }
+
+    function changeSprite (sprite)
+         local idx = lampiaoGroup.currentLampiao
+         lampiao[idx].isVisible = false
+          lampiao[1].isVisible = false
+         lampiaoGroup.currentLampiao = sprite
+         lampiao[lampiaoGroup.currentLampiao].isVisible = true
+
+         if (sprite ~= 2) then
+            timer.performWithDelay( 300, function ()
+               lampiao[lampiaoGroup.currentLampiao].isVisible = false
+               lampiao[1].isVisible = true
+            end )
+         end
+    end
+
 
 local function endGame()
+    
+    for i = 1, #lampiaoImages do
+       lampiao[i].isVisible = false
+    end
 
-    lampiao[lampiaoGroup.currentLampiao].isVisible = false
+    --lampiao[lampiaoGroup.currentLampiao].isVisible = false
     composer.setVariable( "finalScore", score )
     composer.setVariable( "fama", fama[indexFama] )
     composer.gotoScene( "gameover", { time=800, effect="crossFade" } )
@@ -101,7 +127,16 @@ local function criarInimigo()
     table.insert( inimigosTable, inimigo )
     local randomPosition = math.random(6)
 
+    if (table.getn(inimigosTable) > 3) then
+        
+        audio.play ( soundPain )
+        timer.cancel( gameLoopTimer )
+        changeSprite(2)
 
+        timer.performWithDelay( 3000, function ()
+            endGame();
+        end )
+    end
 
     local position = {
         [1] = function ()
@@ -148,37 +183,14 @@ local function criarInimigo()
 
     position[randomPosition]()
 
-    function dead ()
-      timer.cancel( gameLoopTimer )
-      changeSprite(2)
 
-      timer.performWithDelay( 2000, function ()
-        endGame();
-      end )
-    end
-
-    local gameoverTimer = timer.performWithDelay( 2000, dead, 1 )
+   -- local gameoverTimer = timer.performWithDelay( 2000, dead, 1 )
 
     local function tapInimigo(event)
 
-        local changeCharacterPosition = {
-             ['rm'] = function () changeSprite(3) end,
-             ['rb'] = function () changeSprite(4) end,
-             ['rt'] = function () changeSprite(5) end,
-             ['lm'] = function () changeSprite(6) end,
-             ['lb'] = function () changeSprite(7) end,
-             ['lt'] = function () changeSprite(8) end
-        }
-
-        function changeSprite (sprite)
-             local idx = lampiaoGroup.currentLampiao
-             lampiao[idx].isVisible = false
-             lampiaoGroup.currentLampiao = sprite
-             lampiao[lampiaoGroup.currentLampiao].isVisible = true
-        end
 
         changeCharacterPosition[inimigo.posicao]()
-        timer.cancel( gameoverTimer )
+        --timer.cancel( gameoverTimer )
         display.remove( inimigo )
 
         for i = #inimigosTable, 1, -1 do
@@ -234,8 +246,8 @@ function scene:create( event )
     lampiao[lampiaoGroup.currentLampiao].isVisible = true
 
     ------ Seta estilo e cor para os labels de score e fama -------------
-    scoreText = display.newText( uiGroup, "Mortos: "..score, display.contentCenterX, 20, "assets/fonts/cordel_I.ttf", 18 )
-    famaText = display.newText( uiGroup, "Cangaceiro "..fama[indexFama], display.contentCenterX, 60, "assets/fonts/cordel_I.ttf", 13 )
+    scoreText = display.newText( uiGroup, "Vítimas: "..score, display.contentCenterX, 20, "assets/fonts/xilosa.ttf", 20 )
+    famaText = display.newText( uiGroup, ""..fama[indexFama], display.contentCenterX, 60, "assets/fonts/xilosa.ttf", 16 )
     scoreText:setFillColor( gray )
     famaText:setFillColor( gray )
 end
