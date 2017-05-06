@@ -10,24 +10,20 @@ local scene = composer.newScene()
 
 
 local score = 0
+local speed = 1500
 local inimigosTable = {}
-local proxNivel = 5
+local proxNivel = 10
 local indexFama = 1
 local inimigo
 local gameLoopTimer
 local scoreText
 local famaText
-local soundShot = audio.loadSound( "sounds/Shot2.mp3" )
+local soundShot = audio.loadSound( "assets/sounds/Shot2.mp3" )
 
 local fama = {
-    "Iniciante", "Caldo de bila",
-    "Fuleiragem",
-    "Alma de gato",
-    "Cabra bom",
-    "da Gota serena",
-    "Cabra arretado",
-    "Alma sebosa",
-    "Cabra da peste",
+    "Iniciante", "Caldo de bila", "Fuleiragem",
+    "Alma de gato", "Cabra bom", "da Gota serena",
+    "Cabra arretado", "Alma sebosa", "Cabra da peste",
     "Lampião"
 }
 
@@ -46,13 +42,14 @@ local bottomSide = display.contentHeight - 40
 local lampiaoGroup = display.newGroup()
 local lampiao = {}
 local lampiaoImages = {
-   "img/frame/bottom.png",
-   "img/frame/right.png",
-   "img/frame/rightbottom.png",
-   "img/frame/righttop.png",
-   "img/frame/left.png",
-   "img/frame/leftbottom.png",
-   "img/frame/lefttop.png"
+   "assets/img/frame/initial.png",
+   "assets/img/frame/dead.png",
+   "assets/img/frame/right.png",
+   "assets/img/frame/rightbottom.png",
+   "assets/img/frame/righttop.png",
+   "assets/img/frame/left.png",
+   "assets/img/frame/leftbottom.png",
+   "assets/img/frame/lefttop.png"
 }
 
 
@@ -65,25 +62,32 @@ local lampiaoImages = {
 
 ------------- Atualiza o status da fama -------------
 
-local function updateFama ()
+function updateFama ()
     if (score >= proxNivel) then
-        proxNivel = proxNivel + 5
+        proxNivel = proxNivel + 10
         indexFama = indexFama + 1
         famaText.text = "Cangaceiro "..fama[indexFama]
+
+        if (speed > 200) then
+            speed = speed - 100
+        end
+
+        timer.cancel(gameLoopTimer)
+        start(speed)
     end
 end
 
 ----------- Atualiza o score -----------------------
 
-local function updateScore ()
+function updateScore ()
     scoreText.text = "Mortos: "..score
     updateFama()
 end
 
-local function endGame()
-    local idx = lampiaoGroup.currentLampiao
-    lampiao[idx].isVisible = false
 
+local function endGame()
+
+    lampiao[lampiaoGroup.currentLampiao].isVisible = false
     composer.setVariable( "finalScore", score )
     composer.setVariable( "fama", fama[indexFama] )
     composer.gotoScene( "gameover", { time=800, effect="crossFade" } )
@@ -93,20 +97,10 @@ end
 
 local function criarInimigo()
 
-    local inimigo = display.newImageRect( mainGroup, "img/enemy.png", 51, 70 )
+    local inimigo = display.newImageRect( mainGroup, "assets/img/inimigo.png", 70, 70 )
     table.insert( inimigosTable, inimigo )
-
     local randomPosition = math.random(6)
 
--- Posiciona o inimigo de acordo com o random
--- Legenda:
--- lm = left middle
--- Lt = Left top
--- lb = Left bottom
-
--- rm = Right middle
--- rt = Right top
--- rb = Right bottom
 
 
     local position = {
@@ -133,18 +127,21 @@ local function criarInimigo()
              inimigo.x = display.contentWidth
              inimigo.y = topSide
              inimigo.posicao = "rt"
+             inimigo.xScale = -1
              transition.to( inimigo, { x=display.contentWidth -10, time=100, } )
         end,
         [5] = function ()
              inimigo.x = display.contentWidth
              inimigo.y = midSide
              inimigo.posicao = "rm"
+             inimigo.xScale = -1
              transition.to( inimigo, { x=display.contentWidth -10, time=100, } )
         end,
         [6] = function ()
              inimigo.x = display.contentWidth
              inimigo.y = bottomSide
              inimigo.posicao = "rb"
+             inimigo.xScale = -1
              transition.to( inimigo, { x=display.contentWidth -10, time=100, } )
         end
     }
@@ -153,29 +150,24 @@ local function criarInimigo()
 
     function dead ()
       timer.cancel( gameLoopTimer )
+      changeSprite(2)
+
       timer.performWithDelay( 2000, function ()
         endGame();
       end )
     end
 
-    local gameoverTimer = timer.performWithDelay( 1000, dead, 1 )
+    local gameoverTimer = timer.performWithDelay( 2000, dead, 1 )
 
     local function tapInimigo(event)
 
-
         local changeCharacterPosition = {
-
-             ['rm'] = function () changeSprite(2) end,
-
-             ['rb'] = function () changeSprite(3) end,
-
-             ['rt'] = function () changeSprite(4) end,
-
-             ['lm'] = function () changeSprite(5) end,
-
-             ['lb'] = function () changeSprite(6) end,
-
-             ['lt'] = function () changeSprite(7) end
+             ['rm'] = function () changeSprite(3) end,
+             ['rb'] = function () changeSprite(4) end,
+             ['rt'] = function () changeSprite(5) end,
+             ['lm'] = function () changeSprite(6) end,
+             ['lb'] = function () changeSprite(7) end,
+             ['lt'] = function () changeSprite(8) end
         }
 
         function changeSprite (sprite)
@@ -186,9 +178,7 @@ local function criarInimigo()
         end
 
         changeCharacterPosition[inimigo.posicao]()
-
         timer.cancel( gameoverTimer )
-
         display.remove( inimigo )
 
         for i = #inimigosTable, 1, -1 do
@@ -199,19 +189,16 @@ local function criarInimigo()
         end
 
         score = score + 1
-
         updateScore();
-
         audio.play( soundShot )
-
      end
 
      inimigo:addEventListener( "touch", tapInimigo )
 end
 
 
-local function start ()
-    gameLoopTimer = timer.performWithDelay( 1000, criarInimigo, 0 )
+function start (speed)
+    gameLoopTimer = timer.performWithDelay( speed, criarInimigo, 0 )
 end
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -232,12 +219,12 @@ function scene:create( event )
     sceneGroup:insert( uiGroup )
 
 
-    local background = display.newImageRect( backGroup, "img/fundo_cordel.jpg", 600, 350)
+    local background = display.newImageRect( backGroup, "assets/img/fundo_cordel.jpg", 600, 350)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
     for i = 1, #lampiaoImages do
-       lampiao[i] = display.newImageRect( lampiaoGroup, lampiaoImages[i], 100, 100 )
+       lampiao[i] = display.newImageRect( lampiaoGroup, lampiaoImages[i], 300, 240 )
        lampiao[i].x = display.contentCenterX
        lampiao[i].y = display.contentCenterY + 20
        lampiao[i].isVisible = false
@@ -246,15 +233,11 @@ function scene:create( event )
     lampiaoGroup.currentLampiao = 1
     lampiao[lampiaoGroup.currentLampiao].isVisible = true
 
-
     ------ Seta estilo e cor para os labels de score e fama -------------
-    scoreText = display.newText( uiGroup, "Mortos: "..score, display.contentCenterX, 20, "cordel_I.ttf", 18 )
-    famaText = display.newText( uiGroup, "Cangaceiro "..fama[indexFama], display.contentCenterX, 60, "cordel_I.ttf", 13 )
+    scoreText = display.newText( uiGroup, "Mortos: "..score, display.contentCenterX, 20, "assets/fonts/cordel_I.ttf", 18 )
+    famaText = display.newText( uiGroup, "Cangaceiro "..fama[indexFama], display.contentCenterX, 60, "assets/fonts/cordel_I.ttf", 13 )
     scoreText:setFillColor( gray )
     famaText:setFillColor( gray )
-
-    local btnPause = display.newText( uiGroup, "Pare", display.contentCenterX, 300, "cordel_I.ttf", 14 )
-    btnPause:setFillColor( gray )
 end
 
 
@@ -267,11 +250,9 @@ function scene:show( event )
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
 
-
-
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
-      start()
+      start(speed)
 	end
 end
 
@@ -284,12 +265,11 @@ function scene:hide( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
-        composer.removeScene( "game" )
 
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
-
-	end
+        composer.removeScene( "game" )
+    end
 end
 
 

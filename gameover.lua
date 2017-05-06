@@ -31,42 +31,42 @@ function scene:create( event )
 
 	local sceneGroup = self.view
 	-- Code here runs when the scene is first created but has not yet appeared on screen
-    local background = display.newImageRect( sceneGroup, "img/fundo_cordel.jpg", 600, 350 )
+    local background = display.newImageRect( sceneGroup, "assets/img/fundo_cordel.jpg", 600, 350 )
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
 
-    local title = display.newText( sceneGroup, "VOCÊ FOI PEGO", display.contentCenterX, 60, "cordel_I.ttf", 30 )
+    local title = display.newText( sceneGroup, "FOI PEGO", display.contentCenterX, 60, "assets/fonts/cordel_I.ttf", 30 )
     title:setFillColor( gray )
 
-    local scoreLabel = display.newText( sceneGroup, "Mortos: ".. score, display.contentCenterX, 120, "cordel_I.ttf", 20 )
+    local scoreLabel = display.newText( sceneGroup, "Mortos: ".. score, display.contentCenterX, 120, "assets/fonts/cordel_I.ttf", 20 )
     scoreLabel:setFillColor( gray )
 
-    local famaTitle = display.newText( sceneGroup, "Legado: ", display.contentCenterX, 160, "cordel_I.ttf", 14 )
+    local famaTitle = display.newText( sceneGroup, "Legado: ", display.contentCenterX, 160, "assets/fonts/cordel_I.ttf", 14 )
     famaTitle:setFillColor( gray )
 
-    local famaLabel = display.newText( sceneGroup, "Cangaceiro "..fama, display.contentCenterX, 190, "cordel_I.ttf", 14 )
+    local famaLabel = display.newText( sceneGroup, "Cangaceiro "..fama, display.contentCenterX, 190, "assets/fonts/cordel_I.ttf", 14 )
     famaLabel:setFillColor( gray )
 
-    local playButton = display.newText( sceneGroup, "Vai de novo", display.contentCenterX - 50, 240, "cordel_I.ttf", 16 )
+    local playButton = display.newText( sceneGroup, "Vai de novo", display.contentCenterX - 50, 240, "assets/fonts/cordel_I.ttf", 16 )
     playButton:setFillColor( gray )
 
-    local menuButton = display.newText( sceneGroup, "MENU", display.contentCenterX + 70, 240, "cordel_I.ttf", 16 )
+    local menuButton = display.newText( sceneGroup, "MENU", display.contentCenterX + 70, 240, "assets/fonts/cordel_I.ttf", 16 )
     menuButton:setFillColor( gray )
 
-    local iconEnemy = display.newText( sceneGroup, "_", -400, display.contentHeight - 40, "cordel_I.ttf", 70 )
+    local iconEnemy = display.newText( sceneGroup, "_", -400, display.contentHeight - 40, "assets/fonts/cordel_I.ttf", 70 )
     iconEnemy:setFillColor( gray )
     transition.to( iconEnemy, { x=display.contentWidth + 150, time=150000, } )
 
-    local iconLampiao = display.newText( sceneGroup, "!", -200, display.contentHeight - 40, "cordel_I.ttf", 70 )
+    local iconLampiao = display.newText( sceneGroup, "!", -200, display.contentHeight - 40, "assets/fonts/cordel_I.ttf", 70 )
     iconLampiao:setFillColor( gray )
     transition.to( iconLampiao, { x=display.contentWidth + 150, time=100000, } )
 
-    local iconHouse = display.newText( sceneGroup, "$", 40, display.contentHeight - 40, "cordel_I.ttf", 70 )
+    local iconHouse = display.newText( sceneGroup, "$", 40, display.contentHeight - 40, "assets/fonts/cordel_I.ttf", 70 )
     iconHouse:setFillColor( gray )
     transition.to( iconHouse, { x=display.contentWidth + 150, time=80000, } )
 
-    local iconPlants = display.newText( sceneGroup, "&", display.contentWidth - 40, display.contentHeight - 40, "cordel_I.ttf", 70 )
+    local iconPlants = display.newText( sceneGroup, "&", display.contentWidth - 40, display.contentHeight - 40, "assets/fonts/cordel_I.ttf", 70 )
     iconPlants:setFillColor( gray )
     transition.to( iconPlants, { x=display.contentWidth + 150, time=40000, } )
 
