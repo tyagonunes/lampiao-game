@@ -123,38 +123,62 @@ end
 
 local function criarInimigo()
 
-    local inimigo = display.newImageRect( mainGroup, "assets/img/inimigo.png", 70, 70 )
-    table.insert( inimigosTable, inimigo )
-    local randomPosition = math.random(6)
-
-    if (table.getn(inimigosTable) > 3) then
+    if (table.getn(inimigosTable) > 5) then
         
         audio.play ( soundPain )
         timer.cancel( gameLoopTimer )
         changeSprite(2)
+
+        for i = #inimigosTable, 1, -1 do
+             inimRest = inimigosTable[i];
+             display.remove( inimRest )
+        end
 
         timer.performWithDelay( 3000, function ()
             endGame();
         end )
     end
 
+    local randomPosition = math.random(6)
+
+    local  statusRandom = true;
+    for i = #inimigosTable, 1, -1 do
+            if ( inimigosTable[i].order == randomPosition) then
+                statusRandom = false
+                break
+            end
+        end
+
+    if (statusRandom) then
+    local inimigo = display.newImageRect( mainGroup, "assets/img/inimigo.png", 70, 70 )
+    table.insert( inimigosTable, inimigo )
+
+   -- table.insert(inimigosPosition, randomPosition)
+
+    
+
+
+
     local position = {
         [1] = function ()
             inimigo.x = -10
             inimigo.y = topSide
             inimigo.posicao = "lt"
+            inimigo.order = 1
             transition.to( inimigo, { x=0, time=100, } )
         end,
         [2] = function ()
             inimigo.x = -10
             inimigo.y = midSide
             inimigo.posicao = "lm"
+            inimigo.order = 2
             transition.to( inimigo, { x=0, time=100, } )
         end,
         [3] = function ()
             inimigo.x = -10
             inimigo.y = bottomSide
             inimigo.posicao = "lb"
+            inimigo.order = 3
             transition.to( inimigo, { x=0, time=100, } )
         end,
 
@@ -163,6 +187,7 @@ local function criarInimigo()
              inimigo.y = topSide
              inimigo.posicao = "rt"
              inimigo.xScale = -1
+             inimigo.order = 4
              transition.to( inimigo, { x=display.contentWidth -10, time=100, } )
         end,
         [5] = function ()
@@ -170,6 +195,7 @@ local function criarInimigo()
              inimigo.y = midSide
              inimigo.posicao = "rm"
              inimigo.xScale = -1
+             inimigo.order = 5
              transition.to( inimigo, { x=display.contentWidth -10, time=100, } )
         end,
         [6] = function ()
@@ -177,35 +203,41 @@ local function criarInimigo()
              inimigo.y = bottomSide
              inimigo.posicao = "rb"
              inimigo.xScale = -1
+             inimigo.order = 6
              transition.to( inimigo, { x=display.contentWidth -10, time=100, } )
         end
     }
 
-    position[randomPosition]()
+   
+
+    
+        position[randomPosition]()
+        
 
 
-   -- local gameoverTimer = timer.performWithDelay( 2000, dead, 1 )
+     -- local gameoverTimer = timer.performWithDelay( 2000, dead, 1 )
 
-    local function tapInimigo(event)
+        local function tapInimigo(event)
 
 
-        changeCharacterPosition[inimigo.posicao]()
-        --timer.cancel( gameoverTimer )
-        display.remove( inimigo )
+            changeCharacterPosition[inimigo.posicao]()
+            --timer.cancel( gameoverTimer )
+            display.remove( inimigo )
 
-        for i = #inimigosTable, 1, -1 do
-            if ( inimigosTable[i] == inimigo) then
-                table.remove( inimigosTable, i )
-                break
+            for i = #inimigosTable, 1, -1 do
+                if ( inimigosTable[i] == inimigo) then
+                    table.remove( inimigosTable, i )
+                    break
+                end
             end
-        end
 
-        score = score + 1
-        updateScore();
-        audio.play( soundShot )
-     end
+            score = score + 1
+            updateScore();
+            audio.play( soundShot )
+         end
 
-     inimigo:addEventListener( "touch", tapInimigo )
+         inimigo:addEventListener( "touch", tapInimigo )
+    end
 end
 
 
