@@ -10,7 +10,7 @@ local scene = composer.newScene()
 
 
 local score = 0
-local speed = 1500
+local speed = 1000
 local inimigosTable = {}
 local proxNivel = 10
 local indexFama = 1
@@ -21,10 +21,10 @@ local famaText
 local soundShot = audio.loadSound( "assets/sounds/Shot2.mp3" )
 local soundPain = audio.loadSound( "assets/sounds/pain.mp3" )
 local fama = {
-    "Iniciante", "Caldo de bila", "Fuleiragem",
-    "Alma de gato", "Cabra bom", "da Gota serena",
-    "Cabra arretado", "Alma sebosa", "Cabra da peste",
-    "Lampião"
+    "Cangaceiro iniciante", "Cangaceiro caldo de bila", "Cangaceiro fuleiragem",
+    "Cangaceiro alma de gato", "Cangaceiro cabra bom", "Cangaceiro da gota serena",
+    "Cangaceiro cabra arretado", "Cangaceiro alma sebosa", "Cangaceiro cabra da peste",
+    "Cangaceiro Lampião"
 }
 
 local backGroup = display.newGroup()
@@ -65,10 +65,10 @@ local lampiaoImages = {
 function updateFama ()
     if (score >= proxNivel) then
         if (indexFama < table.getn(fama)) then
-            proxNivel = proxNivel + 10
+            proxNivel = proxNivel + 15
             indexFama = indexFama + 1            
-            famaText.text = ""..fama[indexFama]
-            speed = speed - 100
+            famaText.text = "Nível: "..fama[indexFama]
+            speed = speed - 80
             timer.cancel(gameLoopTimer)
             start(speed)
         end
@@ -78,7 +78,7 @@ end
 ----------- Atualiza o score -----------------------
 
 function updateScore ()
-    scoreText.text = "Vítimas: "..score
+    scoreText.text = "Pontos: "..score
     updateFama()
 end
 
@@ -92,14 +92,14 @@ end
         }
 
     function changeSprite (sprite)
-         local idx = lampiaoGroup.currentLampiao
-         lampiao[idx].isVisible = false
-          lampiao[1].isVisible = false
-         lampiaoGroup.currentLampiao = sprite
-         lampiao[lampiaoGroup.currentLampiao].isVisible = true
+        local idx = lampiaoGroup.currentLampiao
+        lampiao[idx].isVisible = false
+        lampiao[1].isVisible = false
+        lampiaoGroup.currentLampiao = sprite
+        lampiao[lampiaoGroup.currentLampiao].isVisible = true
 
          if (sprite ~= 2) then
-            timer.performWithDelay( 300, function ()
+            timer.performWithDelay( 200, function ()
                lampiao[lampiaoGroup.currentLampiao].isVisible = false
                lampiao[1].isVisible = true
             end )
@@ -124,7 +124,7 @@ end
 local function criarInimigo()
 
     -- Testa se tem mais de 3 inimigos na tela. Se tiver chama 0 gameover senao permite concluir o resto da criação de inimigo
-    if (table.getn(inimigosTable) > 3) then
+    if (table.getn(inimigosTable) > 2) then
         
         audio.play ( soundPain )
         timer.cancel( gameLoopTimer )
@@ -152,7 +152,7 @@ local function criarInimigo()
     end
 
     if (statusRandom) then
-        local inimigo = display.newImageRect( mainGroup, "assets/img/inimigo.png", 70, 70 )
+        local inimigo = display.newImageRect( mainGroup, "assets/img/inimigo.png", 50, 60 )
         table.insert( inimigosTable, inimigo )
 
         local position = {
@@ -209,6 +209,7 @@ local function criarInimigo()
         
 
         local function tapInimigo(event)
+            audio.play( soundShot )
             changeCharacterPosition[inimigo.posicao]()
             display.remove( inimigo )
 
@@ -221,7 +222,6 @@ local function criarInimigo()
 
             score = score + 1
             updateScore();
-            audio.play( soundShot )
          end
 
          inimigo:addEventListener( "touch", tapInimigo )
@@ -266,8 +266,8 @@ function scene:create( event )
     lampiao[lampiaoGroup.currentLampiao].isVisible = true
 
     ------ Seta estilo e cor para os labels de score e fama -------------
-    scoreText = display.newText( uiGroup, "Vítimas: "..score, display.contentCenterX, 20, "assets/fonts/xilosa.ttf", 20 )
-    famaText = display.newText( uiGroup, ""..fama[indexFama], display.contentCenterX, 60, "assets/fonts/xilosa.ttf", 16 )
+    scoreText = display.newText( uiGroup, "Pontos: "..score, display.contentCenterX, 20, "assets/fonts/xilosa.ttf", 20 )
+    famaText = display.newText( uiGroup, "Nível: "..fama[indexFama], display.contentCenterX, 60, "assets/fonts/xilosa.ttf", 16 )
     scoreText:setFillColor( gray )
     famaText:setFillColor( gray )
 end

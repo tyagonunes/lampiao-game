@@ -31,20 +31,14 @@ function scene:create( event )
     local instucao1 = display.newText( sceneGroup, "- Toque nos inimigos que aparecem na tela para eliminá-los.", display.contentCenterX, 70, "assets/fonts/xilosa.ttf", 18 )
     instucao1:setFillColor( gray )
 
-    local instucao2 = display.newText( sceneGroup, "- Não permita mais de 3 inimigos permaneçam na tela ou morrerá.", display.contentCenterX, 100, "assets/fonts/xilosa.ttf", 18 )
+    local instucao2 = display.newText( sceneGroup, "- Não permita que mais de 3 inimigos permaneçam na tela.", display.contentCenterX, 100, "assets/fonts/xilosa.ttf", 18 )
     instucao2:setFillColor( gray )
 
-    local instucao3 = display.newText( sceneGroup, "- Quanto mais vitimas você tiver, maior será a fama do seu cangaceiro.", display.contentCenterX, 130, "assets/fonts/xilosa.ttf", 18 )
+    local instucao3 = display.newText( sceneGroup, "- Quanto mais pontos você tiver, mais rápido vai ficar.", display.contentCenterX, 130, "assets/fonts/xilosa.ttf", 18 )
     instucao3:setFillColor( gray )
 
-    local instucao4 = display.newText( sceneGroup, "- Seu objetivo é ter o maior número de vítimas.", display.contentCenterX, 160, "assets/fonts/xilosa.ttf", 18 )
-    instucao4:setFillColor( gray )
-
-     local instucao5 = display.newText( sceneGroup, "- Seu desafio é chegar ao nivel de fama de Lampião.", display.contentCenterX, 190, "assets/fonts/xilosa.ttf", 18 )
-    instucao5:setFillColor( gray )
-
     local playButton = display.newText( sceneGroup, "Vamos lá", display.contentCenterX, 260, "assets/fonts/xilosa.ttf", 23 )
-    playButton:setFillColor( gray )
+    playButton:setFillColor( blue )
 
      playButton:addEventListener( "tap", gotoGame )
    

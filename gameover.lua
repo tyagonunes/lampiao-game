@@ -1,12 +1,48 @@
 
 local composer = require( "composer" )
+local json = require( "json" )
 
 local scene = composer.newScene()
 
--- -----------------------------------------------------------------------------------
+ -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
+
+local scoresTable;
+local record;
+ 
+local filePath = system.pathForFile( "scores.json", system.DocumentsDirectory )
+
+local function loadScores()
+ 
+    local file = io.open( filePath, "r" )
+ 
+    if file then
+        local contents = file:read( "*a" )
+        io.close( file )
+        record = json.decode( contents )
+    end
+ 
+    if ( record == nil ) then
+        record = 0;
+    end
+end
+
+
+local function saveScores()
+ 
+    -- for i = #scoresTable, 11, -1 do
+    --     table.remove( scoresTable, i )
+    -- end
+ 
+    local file = io.open( filePath, "w" )
+ 
+    if file then
+        file:write( json.encode( scoresTable ) )
+        io.close( file )
+    end
+end
 
 
 local function gotoGame()
@@ -25,9 +61,18 @@ end
 
 -- create()
 function scene:create( event )
+   
+    loadScores()
 
     local score = composer.getVariable( "finalScore" )
     local fama = composer.getVariable( "fama" )
+
+    --composer.setVariable( "finalScore", 0 )
+
+    if (score > record) then
+        scoresTable = score;
+        saveScores()
+    end
 
 	local sceneGroup = self.view
 	-- Code here runs when the scene is first created but has not yet appeared on screen
@@ -36,37 +81,38 @@ function scene:create( event )
     background.y = display.contentCenterY
 
 
-    local title = display.newText( sceneGroup, "FOI PEGO", display.contentCenterX, 60, "assets/fonts/cordel_I.ttf", 30 )
+    local title = display.newText( sceneGroup, "VOCÊ FOI PEGO", display.contentCenterX, 60, "assets/fonts/xilosa.ttf", 30 )
     title:setFillColor( gray )
 
-    local scoreLabel = display.newText( sceneGroup, "Mortos: ".. score, display.contentCenterX, 120, "assets/fonts/cordel_I.ttf", 20 )
+    local scoreLabel = display.newText( sceneGroup, "Pontos: ".. score, display.contentCenterX-80, 120, "assets/fonts/xilosa.ttf", 20 )
     scoreLabel:setFillColor( gray )
-
-    local famaTitle = display.newText( sceneGroup, "Legado: ", display.contentCenterX, 160, "assets/fonts/cordel_I.ttf", 14 )
-    famaTitle:setFillColor( gray )
-
-    local famaLabel = display.newText( sceneGroup, "Cangaceiro "..fama, display.contentCenterX, 190, "assets/fonts/cordel_I.ttf", 14 )
+   
+    local famaLabel = display.newText( sceneGroup, "Recorde: "..record, display.contentCenterX+80, 120, "assets/fonts/xilosa.ttf", 18 )
     famaLabel:setFillColor( gray )
 
-    local playButton = display.newText( sceneGroup, "Vai de novo", display.contentCenterX - 50, 240, "assets/fonts/cordel_I.ttf", 16 )
+    local famaTitle = display.newText( sceneGroup, "Nível alcançado: "..fama, display.contentCenterX, 160, "assets/fonts/xilosa.ttf", 18 )
+    famaTitle:setFillColor( gray )
+
+
+    local playButton = display.newText( sceneGroup, "NOVAMENTE", display.contentCenterX - 50, 210, "assets/fonts/xilosa.ttf", 23 )
     playButton:setFillColor( gray )
 
-    local menuButton = display.newText( sceneGroup, "MENU", display.contentCenterX + 70, 240, "assets/fonts/cordel_I.ttf", 16 )
+    local menuButton = display.newText( sceneGroup, "INÍCIO", display.contentCenterX + 70, 210, "assets/fonts/xilosa.ttf", 23 )
     menuButton:setFillColor( gray )
 
-    local iconEnemy = display.newText( sceneGroup, "_", -400, display.contentHeight - 40, "assets/fonts/cordel_I.ttf", 70 )
+    local iconEnemy = display.newText( sceneGroup, "_", -400, display.contentHeight - 40, "assets/fonts/cordel_I.ttf", 60 )
     iconEnemy:setFillColor( gray )
     transition.to( iconEnemy, { x=display.contentWidth + 150, time=150000, } )
 
-    local iconLampiao = display.newText( sceneGroup, "!", -200, display.contentHeight - 40, "assets/fonts/cordel_I.ttf", 70 )
+    local iconLampiao = display.newText( sceneGroup, "!", -200, display.contentHeight - 40, "assets/fonts/cordel_I.ttf", 50 )
     iconLampiao:setFillColor( gray )
     transition.to( iconLampiao, { x=display.contentWidth + 150, time=100000, } )
 
-    local iconHouse = display.newText( sceneGroup, "$", 40, display.contentHeight - 40, "assets/fonts/cordel_I.ttf", 70 )
+    local iconHouse = display.newText( sceneGroup, "$", 40, display.contentHeight - 40, "assets/fonts/cordel_I.ttf", 60 )
     iconHouse:setFillColor( gray )
     transition.to( iconHouse, { x=display.contentWidth + 150, time=80000, } )
 
-    local iconPlants = display.newText( sceneGroup, "&", display.contentWidth - 40, display.contentHeight - 40, "assets/fonts/cordel_I.ttf", 70 )
+    local iconPlants = display.newText( sceneGroup, "&", display.contentWidth - 40, display.contentHeight - 40, "assets/fonts/cordel_I.ttf", 60 )
     iconPlants:setFillColor( gray )
     transition.to( iconPlants, { x=display.contentWidth + 150, time=40000, } )
 

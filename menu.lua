@@ -35,7 +35,7 @@ function scene:create( event )
     local iconChapeu = display.newText( sceneGroup, "&", display.contentCenterX, 50, "assets/fonts/xilosa.ttf", 50 )
     iconChapeu:setFillColor( gray )
 
-    local title = display.newText( sceneGroup, "Rei do cangaço", display.contentCenterX, 120, "assets/fonts/xilosa.ttf", 50 )
+    local title = display.newText( sceneGroup, "Rei do Cangaço", display.contentCenterX, 120, "assets/fonts/xilosa.ttf", 50 )
     title:setFillColor( gray )
 
     local playButton = display.newText( sceneGroup, "Jogar", display.contentCenterX, 200, "assets/fonts/xilosa.ttf", 35 )
