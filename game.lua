@@ -124,7 +124,7 @@ end
 local function criarInimigo()
 
     -- Testa se tem mais de 3 inimigos na tela. Se tiver chama 0 gameover senao permite concluir o resto da criação de inimigo
-    if (table.getn(inimigosTable) > 2) then
+    if (table.getn(inimigosTable) > 1) then
         
         audio.play ( soundPain )
         timer.cancel( gameLoopTimer )
@@ -135,7 +135,7 @@ local function criarInimigo()
              display.remove( inimRest )
         end
 
-        timer.performWithDelay( 3000, function ()
+        timer.performWithDelay( 2000, function ()
             endGame();
         end )
     end
