@@ -62,6 +62,10 @@ local lampiaoImages = {
 
 ------------- Atualiza o status da fama -------------
 
+function never( )
+    -- body
+end
+
 function updateFama ()
     if (score >= proxNivel) then
         if (indexFama < table.getn(fama)) then
@@ -113,6 +117,7 @@ local function endGame()
        lampiao[i].isVisible = false
     end
 
+
     --lampiao[lampiaoGroup.currentLampiao].isVisible = false
     composer.setVariable( "finalScore", score )
     composer.setVariable( "fama", fama[indexFama] )
@@ -123,22 +128,7 @@ end
 
 local function criarInimigo()
 
-    -- Testa se tem mais de 3 inimigos na tela. Se tiver chama 0 gameover senao permite concluir o resto da criação de inimigo
-    if (table.getn(inimigosTable) > 1) then
-        
-        audio.play ( soundPain )
-        timer.cancel( gameLoopTimer )
-        changeSprite(2)
-
-        for i = #inimigosTable, 1, -1 do
-             inimRest = inimigosTable[i];
-             display.remove( inimRest )
-        end
-
-        timer.performWithDelay( 2000, function ()
-            endGame();
-        end )
-    end
+   
 
     local randomPosition = math.random(6)
 
@@ -224,7 +214,30 @@ local function criarInimigo()
             updateScore();
          end
 
-         inimigo:addEventListener( "touch", tapInimigo )
+        inimigo:addEventListener( "touch", tapInimigo )
+
+          -- Testa se tem mais de 3 inimigos na tela. Se tiver chama 0 gameover senao permite concluir o resto da criação de inimigo
+        if (table.getn(inimigosTable) > 2) then
+            
+            audio.play ( soundPain )
+            timer.cancel( gameLoopTimer )
+            changeSprite(2)
+
+            for i = #inimigosTable, 1, -1 do
+                 inimRest = inimigosTable[i];
+                 display.remove( inimRest )
+                
+            end
+
+           -- local ban = display.newRect(0, 0, 300*5, 300*5)
+           -- ban:setFillColor(0,0,0,0.3)
+            --ban.strokeWidth = 6
+
+
+            timer.performWithDelay( 1000, function ()
+                endGame();
+            end )
+        end
     end
 end
 

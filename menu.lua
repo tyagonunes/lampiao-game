@@ -60,7 +60,7 @@ function scene:create( event )
     iconPlants:setFillColor( gray )
     transition.to( iconPlants, { x=display.contentWidth + 150, time=40000, } )
 
-    playButton:addEventListener( "tap", gotoInstructions )
+    playButton:addEventListener( "touch", gotoInstructions )
    
 end
 

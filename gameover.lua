@@ -116,8 +116,8 @@ function scene:create( event )
     iconPlants:setFillColor( gray )
     transition.to( iconPlants, { x=display.contentWidth + 150, time=40000, } )
 
-    playButton:addEventListener( "tap", gotoGame )
-    menuButton:addEventListener( "tap", gotoMenu )
+    playButton:addEventListener( "touch", gotoGame )
+    menuButton:addEventListener( "touch", gotoMenu )
 end
 
 
